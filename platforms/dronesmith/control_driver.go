@@ -47,24 +47,24 @@ func (d *ControlDriver) Halt() (err error) {
 
 // Arm tells Drone to get ready to fly
 func (d *ControlDriver) Arm() (err error) {
-	_, err = d.adaptor().Request("POST", "/arm", nil)
+	_, err = d.adaptor().Request("POST", "arm", nil)
 	return
 }
 
 // Disarm tells Drone to prevent flight
 func (d *ControlDriver) Disarm() (err error) {
-	_, err = d.adaptor().Request("POST", "/disarm", nil)
+	_, err = d.adaptor().Request("POST", "disarm", nil)
 	return
 }
 
 // Takeoff tells Drone to takeoff
 func (d *ControlDriver) Takeoff() (err error) {
-	_, err = d.adaptor().Request("POST", "/takeoff", nil)
+	_, err = d.adaptor().Request("POST", "takeoff", nil)
 	return
 }
 
 // Land tells Drone to land
 func (d *ControlDriver) Land() (err error) {
-	_, err = d.adaptor().Request("POST", "/land", nil)
+	_, err = d.adaptor().Request("POST", "land", nil)
 	return
 }

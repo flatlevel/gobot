@@ -12,7 +12,7 @@ import (
 )
 
 func main() {
-	a := dronesmith.NewAdaptor(os.Args[1], os.Args[2], os.Args[3])
+	a := dronesmith.NewAdaptor(os.Args[1], os.Args[2], os.Args[3], os.Args[4])
 	telemetry := dronesmith.NewTelemetryDriver(a)
 	control := dronesmith.NewControlDriver(a)
 

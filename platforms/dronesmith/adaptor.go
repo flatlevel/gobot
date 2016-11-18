@@ -6,7 +6,8 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
-	"strings"
+	// "strings"
+	"bytes"
 
 	"github.com/hybridgroup/gobot"
 )
@@ -22,13 +23,21 @@ type Adaptor struct {
 
 // NewAdaptor creates new Dronesmith adaptor with droneId and accessToken
 // using api.dronesmith.io server as default
-func NewAdaptor(droneID string, userEmail string, userKey string) *Adaptor {
+func NewAdaptor(droneID string, userEmail string, userKey string, localUrl string) *Adaptor {
+	var apiUrl string
+
+	if localUrl != "" {
+		apiUrl = localUrl
+	} else {
+		apiUrl = "http://api.dronesmith.io"
+	}
+
 	return &Adaptor{
 		name:      "Dronesmith",
 		DroneID:   droneID,
 		UserEmail: userEmail,
 		UserKey:   userKey,
-		APIServer: "http://api.dronesmith.io",
+		APIServer: apiUrl,
 		Eventer:   gobot.NewEventer(),
 	}
 }
@@ -39,7 +48,7 @@ func (s *Adaptor) SetName(n string) { s.name = n }
 // Connect returns nil if connection to Dronesmith server is successful,
 // otherwise returns the http error
 func (s *Adaptor) Connect() (err error) {
-	_, err = s.Request("POST", "/start", nil)
+	// _, err = s.Request("POST", "/start", nil)
 
 	return
 }
@@ -47,7 +56,7 @@ func (s *Adaptor) Connect() (err error) {
 // Finalize returns nil if connection to Dronesmith server is finalized successfully
 // otherwise returns the error
 func (s *Adaptor) Finalize() (err error) {
-	_, err = s.Request("POST", "/stop", nil)
+	// _, err = s.Request("POST", "/stop", nil)
 
 	return
 }
@@ -60,7 +69,7 @@ func (s *Adaptor) setAPIServer(server string) {
 // droneURL constructs drone url to make requests from Dronesmith api
 func (s *Adaptor) droneURL() string {
 	if len(s.APIServer) <= 0 {
-		s.setAPIServer("http://api.dronesmith.io")
+		s.setAPIServer(s.APIServer)
 	}
 	return fmt.Sprintf("%v/api/drone/%v", s.APIServer, s.DroneID)
 }
@@ -79,8 +88,8 @@ func (s *Adaptor) request(method string, url string, params url.Values) (m map[s
 	var resp *http.Response
 
 	if method == "POST" {
-		req, _ = http.NewRequest(method, url, strings.NewReader(params.Encode()))
-		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+		req, _ = http.NewRequest(method, url, bytes.NewBuffer([]byte(`{}`)))
+		req.Header.Set("Content-Type", "application/json")
 	} else if method == "GET" {
 		req, _ = http.NewRequest(method, url, nil)
 	}
